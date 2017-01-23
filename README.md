@@ -9,8 +9,13 @@ and RustPager https://github.com/rwth-afu/RustPager
 Connect the Adafruit RFM69HCW module to the Arduino in the following way:
 
 RST - D9
+
 CS - D10
+
 MOSI - D11
+
 MISO - D12
+
 CLK - D13
+
 G0 - D2
