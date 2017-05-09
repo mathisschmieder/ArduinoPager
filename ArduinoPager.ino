@@ -12,11 +12,17 @@
 #define RFM69_RST     9
 
 #define PTT_LED       8
+#define STATUS_LED    7
+
+#define FLASH_DELAY   32000U
  
 RFM69 radio = RFM69(RFM69_CS, RFM69_IRQ, IS_RFM69HCW, RFM69_IRQN);
 
 String message = "";
 boolean messageComplete = false;
+
+bool led = false;
+uint32_t count = 0U;
 
 void setup() {
   while (!Serial); // wait until serial console is open, remove if not tethered to computer
@@ -43,11 +49,18 @@ void setup() {
   radio.encrypt(0);
   message.reserve(512); // reserve 512 bytes just to be sure
 
-  // Initialize PTT_LED pin
+  // Initialize LED pins
   pinMode(PTT_LED, OUTPUT);
+  pinMode(STATUS_LED, OUTPUT);
 }
 
 void loop() {
+  count++;
+  if (count > FLASH_DELAY) {
+    digitalWrite(STATUS_LED, led ? LOW : HIGH);
+    led = !led;
+    count = 0U;
+  }
   if (messageComplete) 
   {
     char cmessage[512];
