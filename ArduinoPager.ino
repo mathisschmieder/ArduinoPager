@@ -10,6 +10,8 @@
 #define RFM69_IRQ     2
 #define RFM69_IRQN    0  // Pin 2 is IRQ 0!
 #define RFM69_RST     9
+
+#define PTT_LED       8
  
 RFM69 radio = RFM69(RFM69_CS, RFM69_IRQ, IS_RFM69HCW, RFM69_IRQN);
 
@@ -40,16 +42,21 @@ void setup() {
   // Disable encryption
   radio.encrypt(0);
   message.reserve(512); // reserve 512 bytes just to be sure
+
+  // Initialize PTT_LED pin
+  pinMode(PTT_LED, OUTPUT);
 }
 
 void loop() {
   if (messageComplete) 
   {
     char cmessage[512];
+    digitalWrite(PTT_LED, HIGH);
     message.toCharArray(cmessage,message.length() + 1);
     radio.send(0, cmessage, strlen(cmessage), 0);
     message = "";
     messageComplete = false;
+    digitalWrite(PTT_LED, LOW);
   }
 }
 
